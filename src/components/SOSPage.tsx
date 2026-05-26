@@ -19,7 +19,6 @@ export const SOSPage = () => {
   const [countdown, setCountdown] = useState(5);
   const [selectedCategory, setSelectedCategory] = useState<string>('medical');
   const [gpsLocked, setGpsLocked] = useState(false);
-  const [radarRotation, setRadarRotation] = useState(0);
   const countdownIntervalRef = useRef<number | null>(null);
 
   // Connection and Geolocation states
@@ -159,15 +158,7 @@ export const SOSPage = () => {
     { id: 'fire', label: 'Fire / Hazard', icon: <Flame size={20} />, color: '#e76f51' },
   ];
 
-  // Radar rotation animation in active state
-  useEffect(() => {
-    if (sosState === 'active') {
-      const interval = setInterval(() => {
-        setRadarRotation(prev => (prev + 3) % 360);
-      }, 30);
-      return () => clearInterval(interval);
-    }
-  }, [sosState]);
+
 
   // Countdown timer handler
   useEffect(() => {
