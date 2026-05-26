@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface WarningGraphicProps {
@@ -24,7 +24,7 @@ export function WarningGraphic({
   const shouldAnimate = enableAnimations && !shouldReduceMotion;
   const speedMultiplier = 1 / animationSpeed;
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -34,8 +34,7 @@ export function WarningGraphic({
       },
     },
   };
-
-  const pathLineVariants = {
+  const pathLineVariants: Variants = {
     hidden: { pathLength: 0, opacity: 0.3 },
     visible: {
       pathLength: 1,
@@ -43,8 +42,7 @@ export function WarningGraphic({
       transition: { pathLength: { duration: 1.2 * speedMultiplier, ease: "easeOut" } },
     },
   };
-
-  const triangleVariants = {
+  const triangleVariants: Variants = {
     hidden: { opacity: 0, pathLength: 0 },
     visible: {
       opacity: 1,
@@ -56,8 +54,7 @@ export function WarningGraphic({
       },
     },
   };
-
-  const elementVariants = {
+  const elementVariants: Variants = {
     hidden: { opacity: 0, scale: 0.5, y: 10 },
     visible: {
       opacity: 1,
@@ -66,8 +63,7 @@ export function WarningGraphic({
       transition: { type: "spring", stiffness: 400, damping: 25, delay: shouldAnimate ? 2.5 * speedMultiplier : 0 },
     },
   };
-
-  const leftStripeVariants = {
+  const leftStripeVariants: Variants = {
     hidden: { opacity: 0, scaleX: 0, transformOrigin: "right center" },
     visible: {
       opacity: 1,
@@ -75,8 +71,7 @@ export function WarningGraphic({
       transition: { type: "spring", stiffness: 400, damping: 30, delay: shouldAnimate ? 1.4 * speedMultiplier : 0 },
     },
   };
-
-  const rightStripeVariants = {
+  const rightStripeVariants: Variants = {
     hidden: { opacity: 0, scaleX: 0, transformOrigin: "left center" },
     visible: {
       opacity: 1,
@@ -84,13 +79,11 @@ export function WarningGraphic({
       transition: { type: "spring", stiffness: 400, damping: 30, delay: shouldAnimate ? 1.4 * speedMultiplier : 0 },
     },
   };
-
-  const stripesContainerVariants = {
+  const stripesContainerVariants: Variants = {
     hidden: {},
     visible: { transition: { staggerChildren: shouldAnimate ? 0.08 * speedMultiplier : 0, delayChildren: shouldAnimate ? 1.4 * speedMultiplier : 0 } },
   };
-
-  const exclamationVariants = {
+  const exclamationVariants: Variants = {
     hidden: { opacity: 0, scale: 0 },
     visible: {
       opacity: 1,
