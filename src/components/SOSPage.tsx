@@ -188,11 +188,6 @@ export const SOSPage = () => {
     }
     setSosState('active');
   };
-
-  const handleStartCountdown = () => {
-    setSosState('countdown');
-  };
-
   const handleCancelCountdown = () => {
     if (countdownIntervalRef.current) {
       clearInterval(countdownIntervalRef.current);
