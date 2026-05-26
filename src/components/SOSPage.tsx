@@ -141,7 +141,93 @@ export const SOSPage = () => {
     return list.map(s => ({ ...s, distance: Math.round(haversine(center, {lat: s.lat, lng: s.lng})) }));
   };
 
-  const nearbyServices = displayCoords ? generateNearbyServices(displayCoords) : [];
+  // Real-time nearby services state (prefer live Overpass API, fallback to fixtures)
+  const [nearbyServices, setNearbyServices] = useState<Array<any>>(
+    displayCoords ? generateNearbyServices(displayCoords) : []
+  );
+
+  // Keep last fetched coords to avoid repeated queries for tiny movements
+  const lastPoiFetchRef = useRef<{lat:number,lng:number} | null>(null);
+
+  // Helper: fetch nearby hospitals and police via Overpass API
+  const fetchNearbyPOIs = async (center: {lat:number,lng:number}, radius = 5000) => {
+    try {
+      const query = `[
+out:json][timeout:25];
+(node["amenity"="hospital"](around:${radius},${center.lat},${center.lng});
+ node["amenity"="police"](around:${radius},${center.lat},${center.lng});
+ node["emergency"="ambulance_station"](around:${radius},${center.lat},${center.lng});
+); out center tags;`;
+
+      const resp = await fetch('https://overpass-api.de/api/interpreter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `data=${encodeURIComponent(query)}`,
+      });
+
+      if (!resp.ok) throw new Error('Overpass request failed');
+      const data = await resp.json();
+      const items = (data.elements || []).map((el: any) => ({
+        id: el.id,
+        type: el.tags && el.tags.amenity ? el.tags.amenity : (el.tags && el.tags.emergency) || 'service',
+        name: (el.tags && (el.tags.name || el.tags.operator)) || 'Unknown',
+        phone: el.tags && (el.tags.phone || el.tags['contact:phone'] || el.tags['contact:tele']) || null,
+        lat: el.lat || (el.center && el.center.lat),
+        lng: el.lon || (el.center && el.center.lon),
+      })).filter((s: any) => s.lat && s.lng);
+
+      // attach computed distance
+      const withDist = items.map((s: any) => ({ ...s, distance: Math.round(haversine(center, { lat: s.lat, lng: s.lng })) }));
+      withDist.sort((a: any,b: any) => a.distance - b.distance);
+      return withDist;
+    } catch (err) {
+      // network or parse error
+      return null;
+    }
+  };
+
+  // Effect: when displayCoords updates significantly, fetch live POIs
+  useEffect(() => {
+    if (!displayCoords) return;
+    const last = lastPoiFetchRef.current;
+    const moved = !last || haversine(last, displayCoords) > 50; // more than 50m
+    if (!moved) return;
+
+    let mounted = true;
+    fetchNearbyPOIs(displayCoords, 8000).then(result => {
+      if (!mounted) return;
+      if (result && result.length) {
+        setNearbyServices(result);
+        lastPoiFetchRef.current = displayCoords;
+      } else {
+        // fallback: synthetic fixtures
+        const fixtures = generateNearbyServices(displayCoords);
+        setNearbyServices(fixtures);
+        lastPoiFetchRef.current = displayCoords;
+      }
+    }).catch(() => {
+      const fixtures = generateNearbyServices(displayCoords);
+      if (mounted) setNearbyServices(fixtures);
+      lastPoiFetchRef.current = displayCoords;
+    });
+
+    return () => { mounted = false; };
+  }, [displayCoords]);
+
+  // Periodic refresh while app is running to keep distances up to date
+  useEffect(() => {
+    if (!displayCoords) return;
+    let mounted = true;
+    const id = window.setInterval(() => {
+      fetchNearbyPOIs(displayCoords, 8000).then(result => {
+        if (!mounted) return;
+        if (result && result.length) setNearbyServices(result);
+      }).catch(() => {/* ignore */});
+    }, 30000); // refresh every 30s
+
+    return () => { mounted = false; clearInterval(id); };
+  }, [displayCoords]);
+
   nearbyServices.sort((a,b) => a.distance - b.distance);
 
   const counts = {

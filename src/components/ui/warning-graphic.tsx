@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { motion, useReducedMotion } from "framer-motion";
+import { cn } from "../../lib/utils";
 
 interface WarningGraphicProps {
   width?: number;
@@ -24,7 +24,7 @@ export function WarningGraphic({
   const shouldAnimate = enableAnimations && !shouldReduceMotion;
   const speedMultiplier = 1 / animationSpeed;
 
-  const containerVariants: Variants = {
+  const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -33,70 +33,42 @@ export function WarningGraphic({
         delayChildren: shouldAnimate ? 0.1 * speedMultiplier : 0,
       },
     },
-  };
-  const pathLineVariants: Variants = {
+  } as any;
+
+  const pathLineVariants = {
     hidden: { pathLength: 0, opacity: 0.3 },
-    visible: {
-      pathLength: 1,
-      opacity: 0.3,
-      transition: { pathLength: { duration: 1.2 * speedMultiplier, ease: "easeOut" } },
-    },
-  };
-  const triangleVariants: Variants = {
+    visible: { pathLength: 1, opacity: 0.3, transition: { pathLength: { duration: 1.2 * speedMultiplier, ease: "easeOut" } } },
+  } as any;
+
+  const triangleVariants = {
     hidden: { opacity: 0, pathLength: 0 },
-    visible: {
-      opacity: 1,
-      pathLength: 1,
-      transition: {
-        pathLength: { duration: 0.8 * speedMultiplier, ease: "easeOut" },
-        opacity: { duration: 0.3 * speedMultiplier },
-        delay: shouldAnimate ? 0.6 * speedMultiplier : 0,
-      },
-    },
-  };
-  const elementVariants: Variants = {
+    visible: { opacity: 1, pathLength: 1, transition: { pathLength: { duration: 0.8 * speedMultiplier, ease: "easeOut" }, opacity: { duration: 0.3 * speedMultiplier }, delay: shouldAnimate ? 0.6 * speedMultiplier : 0 } },
+  } as any;
+
+  const elementVariants = {
     hidden: { opacity: 0, scale: 0.5, y: 10 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 400, damping: 25, delay: shouldAnimate ? 2.5 * speedMultiplier : 0 },
-    },
-  };
-  const leftStripeVariants: Variants = {
+    visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 400, damping: 25, delay: shouldAnimate ? 2.5 * speedMultiplier : 0 } },
+  } as any;
+
+  const leftStripeVariants = {
     hidden: { opacity: 0, scaleX: 0, transformOrigin: "right center" },
-    visible: {
-      opacity: 1,
-      scaleX: 1,
-      transition: { type: "spring", stiffness: 400, damping: 30, delay: shouldAnimate ? 1.4 * speedMultiplier : 0 },
-    },
-  };
-  const rightStripeVariants: Variants = {
+    visible: { opacity: 1, scaleX: 1, transition: { type: "spring", stiffness: 400, damping: 30, delay: shouldAnimate ? 1.4 * speedMultiplier : 0 } },
+  } as any;
+
+  const rightStripeVariants = {
     hidden: { opacity: 0, scaleX: 0, transformOrigin: "left center" },
-    visible: {
-      opacity: 1,
-      scaleX: 1,
-      transition: { type: "spring", stiffness: 400, damping: 30, delay: shouldAnimate ? 1.4 * speedMultiplier : 0 },
-    },
-  };
-  const stripesContainerVariants: Variants = {
+    visible: { opacity: 1, scaleX: 1, transition: { type: "spring", stiffness: 400, damping: 30, delay: shouldAnimate ? 1.4 * speedMultiplier : 0 } },
+  } as any;
+
+  const stripesContainerVariants = {
     hidden: {},
     visible: { transition: { staggerChildren: shouldAnimate ? 0.08 * speedMultiplier : 0, delayChildren: shouldAnimate ? 1.4 * speedMultiplier : 0 } },
-  };
-  const exclamationVariants: Variants = {
+  } as any;
+
+  const exclamationVariants = {
     hidden: { opacity: 0, scale: 0 },
-    visible: {
-      opacity: 1,
-      scale: [0, 1.3, 1],
-      transition: {
-        type: "spring",
-        stiffness: 500,
-        damping: 20,
-        scale: { times: [0, 0.6, 1], duration: 0.6 * speedMultiplier },
-        delay: shouldAnimate ? 2.0 * speedMultiplier : 0,
-      },
-    },
-  };
+    visible: { opacity: 1, scale: [0, 1.3, 1], transition: { type: "spring", stiffness: 500, damping: 20, scale: { times: [0, 0.6, 1], duration: 0.6 * speedMultiplier }, delay: shouldAnimate ? 2.0 * speedMultiplier : 0 } },
+  } as any;
 
   return (
     <motion.svg
@@ -129,7 +101,6 @@ export function WarningGraphic({
           <motion.polygon points="51.838 37.309 61.852 37.309 75.448 13.85 65.434 13.85 51.838 37.309" fill={color} variants={leftStripeVariants} />
           <motion.polygon points="37.422 37.309 47.436 37.309 61.033 13.85 51.019 13.85 37.422 37.309" fill={color} variants={leftStripeVariants} />
           <motion.polygon points="23.007 37.309 33.021 37.309 46.617 13.85 36.603 13.85 23.007 37.309" fill={color} variants={leftStripeVariants} />
-
           <motion.polygon points="125.121 37.309 115.107 37.309 101.51 13.85 111.524 13.85 125.121 37.309" fill={color} variants={rightStripeVariants} />
           <motion.polygon points="139.536 37.309 129.522 37.309 115.926 13.85 125.94 13.85 139.536 37.309" fill={color} variants={rightStripeVariants} />
           <motion.polygon points="153.951 37.309 143.937 37.309 130.341 13.85 140.355 13.85 153.951 37.309" fill={color} variants={rightStripeVariants} />
