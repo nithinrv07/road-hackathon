@@ -188,6 +188,11 @@ export const SOSPage = () => {
     }
     setSosState('active');
   };
+
+  const handleStartCountdown = () => {
+    setSosState('countdown');
+  };
+
   const handleCancelCountdown = () => {
     if (countdownIntervalRef.current) {
       clearInterval(countdownIntervalRef.current);
@@ -206,10 +211,6 @@ export const SOSPage = () => {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <div style={{ fontSize: '0.9rem', color: isOnline ? 'var(--primary)' : 'var(--text-muted)' }}>{isOnline ? 'ONLINE' : 'OFFLINE'}</div>
-            <button className="main-sos-button" onClick={() => setSosState(s => s === 'active' ? 'idle' : 'active')} style={{ padding: '8px 12px' }}>
-              <ShieldAlert size={16} color="white" />
-              <span style={{ marginLeft: 8 }}>{sosState === 'active' ? 'SOS ACTIVE' : 'SOS'}</span>
-            </button>
           </div>
         </div>
         
@@ -296,7 +297,22 @@ export const SOSPage = () => {
                     ))}
                   </div>
 
-                  {/* Main Trigger removed per request */}
+                  {/* Main Trigger Button */}
+                  <div className="trigger-container">
+                    <button 
+                      className="main-sos-button"
+                      onClick={handleStartCountdown}
+                    >
+                      <div className="ripple"></div>
+                      <div className="ripple" style={{ animationDelay: '1s' }}></div>
+                      <div className="ripple" style={{ animationDelay: '2s' }}></div>
+                      <div className="button-core">
+                        <ShieldAlert size={48} color="white" />
+                        <span>ACTIVATE SOS</span>
+                      </div>
+                    </button>
+                    <p className="trigger-subtext">Clicking triggers a 5-second countdown to prevent accidental activation</p>
+                  </div>
                 </motion.div>
               )}
 
