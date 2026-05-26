@@ -301,22 +301,7 @@ export const SOSPage = () => {
                     ))}
                   </div>
 
-                  {/* Main Trigger Button */}
-                  <div className="trigger-container">
-                    <button 
-                      className="main-sos-button"
-                      onClick={handleStartCountdown}
-                    >
-                      <div className="ripple"></div>
-                      <div className="ripple" style={{ animationDelay: '1s' }}></div>
-                      <div className="ripple" style={{ animationDelay: '2s' }}></div>
-                      <div className="button-core">
-                        <ShieldAlert size={48} color="white" />
-                        <span>ACTIVATE SOS</span>
-                      </div>
-                    </button>
-                    <p className="trigger-subtext">Clicking triggers a 5-second countdown to prevent accidental activation</p>
-                  </div>
+                  {/* Main Trigger removed per request */}
                 </motion.div>
               )}
 
