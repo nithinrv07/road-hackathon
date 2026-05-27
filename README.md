@@ -97,4 +97,3 @@ export default defineConfig([
 
   ---
 
-  Generated and polished for competition submission.
