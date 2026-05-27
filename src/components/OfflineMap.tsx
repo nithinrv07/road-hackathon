@@ -12,7 +12,7 @@ interface OfflineMapProps {
   accuracy: number | null;
   isActive: boolean;
   isOnline: boolean;
-  services?: Array<{ id: string | number; type: string; name: string; phone?: string | null; lat: number; lng: number; distance?: number }>;
+  services?: Array<{ id: string; type: string; name: string; phone?: string; lat: number; lng: number }>;
 }
 
 export const OfflineMap: React.FC<OfflineMapProps> = ({ coords, accuracy, isActive, isOnline, services }) => {
@@ -131,8 +131,8 @@ export const OfflineMap: React.FC<OfflineMapProps> = ({ coords, accuracy, isActi
         iconAnchor: [9, 9]
       });
 
-      const m = L.marker([s.lat, s.lng], { icon }).addTo(map) as L.Marker & { serviceData?: typeof s };
-      m.serviceData = s;
+      const m = L.marker([s.lat, s.lng], { icon }).addTo(map);
+      (m as any).serviceData = s;
       serviceMarkersRef.current.push(m);
     });
 
