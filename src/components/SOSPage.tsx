@@ -14,6 +14,16 @@ interface IncidentCategory {
   color: string;
 }
 
+interface Service {
+  id: string | number;
+  type: string;
+  name: string;
+  phone?: string | null;
+  lat: number;
+  lng: number;
+  distance?: number;
+}
+
 export const SOSPage = () => {
   const [sosState, setSosState] = useState<'idle' | 'countdown' | 'active'>('idle');
   const [countdown, setCountdown] = useState(5);
@@ -128,8 +138,8 @@ export const SOSPage = () => {
   };
 
   // Generate nearby service fixtures around current location
-  const generateNearbyServices = (center: {lat:number,lng:number}) => {
-    const list = [
+  const generateNearbyServices = (center: {lat:number,lng:number}): Service[] => {
+    const list: Service[] = [
       { id: 'h1', type: 'hospital', name: 'St. Mary Trauma Center', phone: '+1-555-0101', lat: center.lat + 0.012, lng: center.lng - 0.006 },
       { id: 'a1', type: 'ambulance', name: 'EMS Unit 19', phone: '+1-555-0119', lat: center.lat + 0.006, lng: center.lng - 0.002 },
       { id: 'p1', type: 'police', name: 'Central Precinct', phone: '+1-555-0133', lat: center.lat - 0.008, lng: center.lng + 0.01 },
@@ -142,7 +152,7 @@ export const SOSPage = () => {
   };
 
   // Real-time nearby services state (prefer live Overpass API, fallback to fixtures)
-  const [nearbyServices, setNearbyServices] = useState<Array<any>>(
+  const [nearbyServices, setNearbyServices] = useState<Service[]>(
     displayCoords ? generateNearbyServices(displayCoords) : []
   );
 
@@ -150,7 +160,7 @@ export const SOSPage = () => {
   const lastPoiFetchRef = useRef<{lat:number,lng:number} | null>(null);
 
   // Helper: fetch nearby hospitals and police via Overpass API
-  const fetchNearbyPOIs = async (center: {lat:number,lng:number}, radius = 5000) => {
+  const fetchNearbyPOIs = async (center: {lat:number,lng:number}, radius = 5000): Promise<Service[] | null> => {
     try {
       const query = `[
 out:json][timeout:25];
@@ -167,18 +177,22 @@ out:json][timeout:25];
 
       if (!resp.ok) throw new Error('Overpass request failed');
       const data = await resp.json();
-      const items = (data.elements || []).map((el: any) => ({
-        id: el.id,
-        type: el.tags && el.tags.amenity ? el.tags.amenity : (el.tags && el.tags.emergency) || 'service',
-        name: (el.tags && (el.tags.name || el.tags.operator)) || 'Unknown',
-        phone: el.tags && (el.tags.phone || el.tags['contact:phone'] || el.tags['contact:tele']) || null,
-        lat: el.lat || (el.center && el.center.lat),
-        lng: el.lon || (el.center && el.center.lon),
-      })).filter((s: any) => s.lat && s.lng);
+      const raw = (data.elements || []) as unknown[];
+      const items: Service[] = raw.map((el) => {
+        const anyEl = el as any;
+        return {
+          id: anyEl.id,
+          type: anyEl.tags && anyEl.tags.amenity ? anyEl.tags.amenity : (anyEl.tags && anyEl.tags.emergency) || 'service',
+          name: (anyEl.tags && (anyEl.tags.name || anyEl.tags.operator)) || 'Unknown',
+          phone: anyEl.tags && (anyEl.tags.phone || anyEl.tags['contact:phone'] || anyEl.tags['contact:tele']) || null,
+          lat: anyEl.lat || (anyEl.center && anyEl.center.lat),
+          lng: anyEl.lon || (anyEl.center && anyEl.center.lon),
+        } as Service;
+      }).filter((s) => typeof s.lat === 'number' && typeof s.lng === 'number');
 
       // attach computed distance
-      const withDist = items.map((s: any) => ({ ...s, distance: Math.round(haversine(center, { lat: s.lat, lng: s.lng })) }));
-      withDist.sort((a: any,b: any) => a.distance - b.distance);
+      const withDist = items.map((s) => ({ ...s, distance: Math.round(haversine(center, { lat: s.lat, lng: s.lng })) }));
+      withDist.sort((a,b) => (a.distance ?? 0) - (b.distance ?? 0));
       return withDist;
     } catch (err) {
       // network or parse error
@@ -228,7 +242,7 @@ out:json][timeout:25];
     return () => { mounted = false; clearInterval(id); };
   }, [displayCoords]);
 
-  nearbyServices.sort((a,b) => a.distance - b.distance);
+  nearbyServices.sort((a,b) => (a.distance ?? 0) - (b.distance ?? 0));
 
   const counts = {
     hospital: nearbyServices.filter(s => s.type === 'hospital').length,

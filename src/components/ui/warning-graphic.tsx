@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, Variants } from "framer-motion";
 import { cn } from "../../lib/utils";
 
 interface WarningGraphicProps {
@@ -24,7 +24,7 @@ export function WarningGraphic({
   const shouldAnimate = enableAnimations && !shouldReduceMotion;
   const speedMultiplier = 1 / animationSpeed;
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -33,42 +33,42 @@ export function WarningGraphic({
         delayChildren: shouldAnimate ? 0.1 * speedMultiplier : 0,
       },
     },
-  } as any;
+  };
 
-  const pathLineVariants = {
+  const pathLineVariants: Variants = {
     hidden: { pathLength: 0, opacity: 0.3 },
     visible: { pathLength: 1, opacity: 0.3, transition: { pathLength: { duration: 1.2 * speedMultiplier, ease: "easeOut" } } },
-  } as any;
+  };
 
-  const triangleVariants = {
+  const triangleVariants: Variants = {
     hidden: { opacity: 0, pathLength: 0 },
     visible: { opacity: 1, pathLength: 1, transition: { pathLength: { duration: 0.8 * speedMultiplier, ease: "easeOut" }, opacity: { duration: 0.3 * speedMultiplier }, delay: shouldAnimate ? 0.6 * speedMultiplier : 0 } },
-  } as any;
+  };
 
-  const elementVariants = {
+  const elementVariants: Variants = {
     hidden: { opacity: 0, scale: 0.5, y: 10 },
     visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 400, damping: 25, delay: shouldAnimate ? 2.5 * speedMultiplier : 0 } },
-  } as any;
+  };
 
-  const leftStripeVariants = {
+  const leftStripeVariants: Variants = {
     hidden: { opacity: 0, scaleX: 0, transformOrigin: "right center" },
     visible: { opacity: 1, scaleX: 1, transition: { type: "spring", stiffness: 400, damping: 30, delay: shouldAnimate ? 1.4 * speedMultiplier : 0 } },
-  } as any;
+  };
 
-  const rightStripeVariants = {
+  const rightStripeVariants: Variants = {
     hidden: { opacity: 0, scaleX: 0, transformOrigin: "left center" },
     visible: { opacity: 1, scaleX: 1, transition: { type: "spring", stiffness: 400, damping: 30, delay: shouldAnimate ? 1.4 * speedMultiplier : 0 } },
-  } as any;
+  };
 
-  const stripesContainerVariants = {
+  const stripesContainerVariants: Variants = {
     hidden: {},
     visible: { transition: { staggerChildren: shouldAnimate ? 0.08 * speedMultiplier : 0, delayChildren: shouldAnimate ? 1.4 * speedMultiplier : 0 } },
-  } as any;
+  };
 
-  const exclamationVariants = {
+  const exclamationVariants: Variants = {
     hidden: { opacity: 0, scale: 0 },
     visible: { opacity: 1, scale: [0, 1.3, 1], transition: { type: "spring", stiffness: 500, damping: 20, scale: { times: [0, 0.6, 1], duration: 0.6 * speedMultiplier }, delay: shouldAnimate ? 2.0 * speedMultiplier : 0 } },
-  } as any;
+  };
 
   return (
     <motion.svg

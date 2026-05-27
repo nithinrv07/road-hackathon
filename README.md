@@ -17,57 +17,84 @@ If you are developing a production application, we recommend updating the config
 
 ```js
 export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+  # Road Hackathon — React + TypeScript + Vite
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+  Short, polished README for competition submission.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+  ## Project Overview
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+  Road Hackathon is a single-page web application built with React and TypeScript. It demonstrates real-time mapping and UI interactions using Leaflet, animated UI using Framer Motion, and modern development tooling powered by Vite.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+  ## Key Features
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+  - Interactive map view using `leaflet`.
+  - Smooth UI animations with `framer-motion`.
+  - Accessible icons via `lucide-react`.
+  - Type-safe codebase with `TypeScript`.
+
+  ## Tech Stack
+
+  - Framework: React
+  - Bundler / Dev server: Vite (with `@vitejs/plugin-react`)
+  - Language: TypeScript
+  - Map library: Leaflet
+  - Animation: Framer Motion
+  - Icons: Lucide React
+  - Linting: ESLint and related plugins
+
+  Exact dependency versions are in `package.json`.
+
+  ## Quick Setup (For Judges)
+
+  Prerequisites: Node.js and a package manager (`npm`, `yarn`, or `pnpm`).
+
+  1. Install dependencies
+
+  ```bash
+  npm install
+  ```
+
+  2. Run development server (with HMR)
+
+  ```bash
+  npm run dev
+  ```
+
+  3. Build for production
+
+  ```bash
+  npm run build
+  ```
+
+  4. Preview production build locally
+
+  ```bash
+  npm run preview
+  ```
+
+  5. Run lint checks
+
+  ```bash
+  npm run lint
+  ```
+
+  ## Project Structure (high level)
+
+  - `src/` — application source code
+  - `src/components/` — React components (UI, map, pages)
+  - `src/lib/` — utility functions
+  - `public/` — static assets
+  - `package.json` — scripts & dependencies
+
+  ## Submission Notes
+
+  - This repo is ready for submission. For the competition, provide this project folder or a GitHub link.
+  - To reproduce: run `npm install` then `npm run dev`.
+
+  ## Contact
+
+  If you need any additional information or want a short demo video, contact the author.
+
+  ---
+
+  Generated and polished for competition submission.
